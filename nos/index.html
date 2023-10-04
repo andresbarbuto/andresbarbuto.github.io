@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZZ995MM6RF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZZ995MM6RF');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<title>NOS Argentina - Campaña de Afiliación</title>
+<link rel="stylesheet" href="estilos.css">
+<link rel="stylesheet" href="leaflet.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="leaflet.js"></script>
+<script src="leaflet-providers.js"></script>
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+</head>
+<body>
+<img id="logo" src="logo8.svg">
+<div id="botones">
+  <a href="#info" rel="modal:open"><button type="button">Indicaciones</button></a><br>
+  <a href="#provincias" rel="modal:open"><button type="button">Ir a provincia</button></a><br>
+  <button type="button" onClick="centrarMapa()">Alejar y centrar</button><br>
+
+</div>
+<div id="info" class="modal">
+  <p>En este mapa vas a poder encontrar los lugares en los que vamos a estar afiliando. Hacé clic en la bandera de NOS que te quede más cercana para ver el día y el horario en el que vamos a estar presentes.</p>
+
+  <p>Para ver con más detalle los puntos de afiliación disponibles en tu provincia, usá la opción "Ir a provincia".</p>
+
+  <p>El formulario de afiliación también podés completarlo a través de internet, en <a href="https://www.afiliatenos.com.ar/" target="_blank">www.afiliatenos.com.ar</a>.</p>
+  <a href="#" rel="modal:close">OK</a>
+</div>
+<div id="provincias" class="modal">
+  <ul>
+    <li><a href="#" onClick="CABA()" rel="modal:close">Ciudad de Buenos Aires</a></li>
+    <li><a href="#" onClick="BuenosAires()" rel="modal:close">Buenos Aires</a></li>
+    <li><a href="#" onClick="Catamarca()" rel="modal:close">Catamarca</a></li>
+    <li><a href="#" onClick="Chaco()" rel="modal:close">Chaco</a></li>
+    <li><a href="#" onClick="Chubut()" rel="modal:close">Chubut</a></li>
+    <li><a href="#" onClick="Cordoba()" rel="modal:close">Córdoba</a></li>
+    <li><a href="#" onClick="Corrientes()" rel="modal:close">Corrientes</a></li>
+    <li><a href="#" onClick="EntreRios()" rel="modal:close">Entre Ríos</a></li>
+    <li><a href="#" onClick="Jujuy()" rel="modal:close">Jujuy</a></li>
+    <li><a href="#" onClick="LaRioja()" rel="modal:close">La Rioja</a></li>
+    <li><a href="#" onClick="Mendoza()" rel="modal:close">Mendoza</a></li>
+    <li><a href="#" onClick="Misiones()" rel="modal:close">Misiones</a></li>
+    <li><a href="#" onClick="Neuquen()" rel="modal:close">Neuquén</a></li>
+    <li><a href="#" onClick="RioNegro()" rel="modal:close">Río Negro</a></li>
+    <li><a href="#" onClick="Salta()" rel="modal:close">Salta</a></li>
+    <li><a href="#" onClick="SanJuan()" rel="modal:close">San Juan</a></li>
+    <li><a href="#" onClick="SantaFe()" rel="modal:close">Santa Fe</a></li>
+    <li><a href="#" onClick="SantaCruz()" rel="modal:close">Santa Cruz</a></li>
+    <li><a href="#" onClick="SantiagoDelEstero()" rel="modal:close">Santiago del Estero</a></li>
+    <li><a href="#" onClick="TierraDelFuego()" rel="modal:close">Tierra del Fuego</a></li>
+  </ul>
+</div>
+<div id="mapa"></div>
+<script>
+    var map = L.map('mapa', {
+      center: [-40.5329411,-62],
+      minZoom: 4,
+      zoom: 4,
+      zoomControl: false
+    });
+
+    var defaultLayer = L.tileLayer.provider('Esri.WorldTopoMap').addTo(map);
+
+L.control.zoom({
+    position: 'bottomright'
+}).addTo(map);
+
+var shaded = L.tileLayer.provider('Esri.WorldShadedRelief')
+
+map.on('moveend', function (){
+  if (map.getBounds().getNorth() < -50 && map.getBounds().getWest() > -65 && map.getZoom() > 7) {
+    shaded.addTo(map);
+  } else if (map.hasLayer(shaded)) {
+    map.removeLayer(shaded);
+  }
+});
+
+var bandera = L.icon({
+    iconUrl: 'bandera.png',
+    iconSize: [78, 72],
+    iconAnchor: [3, 72], // point of the icon which will correspond to marker's location
+    popupAnchor: [39, -74] // point from which the popup should open relative to the iconAnchor
+});
+
+var datos = [
+
+
+  /* Ciudad de Buenos Aires */
+
+  [-34.584929, -58.3935969, "<b>Ciudad de Buenos Aires</b><br>Plaza Francia.<br>Sábado 31/10 de 16 a 18 hs."],
+  [-34.6227294,-58.3914712, "<b>Ciudad de Buenos Aires</b><br>Av. Entre Ríos y San Juan.<br>Sábado 31/10 de 10 a 13 hs."],
+  [-34.637265,-58.4053704, "<b>Ciudad de Buenos Aires</b><br>Parque Patricios (Plazoleta Pringles).<br>Sábado 31/10 de 14 a 16 hs."],
+  [-34.65531,-58.4182023, "<b>Ciudad de Buenos Aires</b><br>Av. Rabanal y Centenera<br>Sábado 31/10 de 11 a 13:30 hs."],
+  [-34.6051417,-58.4196747, "<b>Ciudad de Buenos Aires</b><br>Plaza Almagro (Sarmiento y Salguero).<br>Sábado 31/10 de 10 a 15 hs."],
+  [-34.6319436,-58.4555564, "<b>Ciudad de Buenos Aires</b><br>Plaza Misericordia (Av. Directorio y Lautaro).<br>Sábado 31/10 de 10:30 a 13 hs."],
+  [-34.6000008,-58.5117494, "<b>Ciudad de Buenos Aires</b><br>Plaza Arenales (Chivilcoy y Nueva York).<br>Sábado 31/10 de 16 a 18 hs."],
+  [-34.5502817,-58.4774091, "<b>Ciudad de Buenos Aires</b><br>Parque Saavedra (García del Río y Pinto).<br>Sábado 31/10 de 15 a 18 hs."],
+  [-34.5743584,-58.4863215, "<b>Ciudad de Buenos Aires</b><br>Av. Triunvirato y Monroe.<br>Sábado 31/10 de 10 a 13 hs."],
+  [-34.5588226,-58.4505801, "<b>Ciudad de Buenos Aires</b><br>Barrancas de Belgrano (Plaza de Juramento y Virrey Vértiz).<br>Sábado 31/10 de 14 a 17 hs."],
+  [-34.5752883,-58.4149335, "<b>Ciudad de Buenos Aires</b><br>Ecoparque (Av. del Libertador y Sarmiento).<br>Sábado 31/10 de 15 a 17 hs."],
+  [-34.5875072,-58.4551229, "<b>Ciudad de Buenos Aires</b><br>Parque Los Andes (Av. Lacroze y Corrientes).<br>Sábado 31/10 de 10 a 14 hs."],
+  [-34.6765316,-58.4664187, "<b>Ciudad de Buenos Aires</b><br>Frente al EEM N°1 (Entre Cnel. Chilavert y J. Pazos).<br>Sábado 31/10 de 15 a 18 hs."],
+  [-34.6158515,-58.3707312, "<b>Ciudad de Buenos Aires</b><br>San Telmo: Balcarce y Chile (estatua Isidoro Cañones).<br>Sábado 31/10 de 11 a 14 hs."],
+
+
+  /* Buenos Aires */
+  [-34.6509303,-59.4313575, "<b>Partido de Mercedes, Buenos Aires</b><br>Plaza San Martín (Calle 27 y Calle 24).<br>Sábado 31/10 de 11 a 14 hs."],
+  [-34.4886726,-58.7263525, "<b>Partido de Malvinas Argentinas, Buenos Aires</b><br>Rotonda Hipólito Bouchard.<br>Sábado 31/10 de 10 a 13 hs."],
+  [-37.9955275,-57.5523109, "<b>Mar del Plata, Buenos Aires</b><br>Av. Independencia y Luro.<br>Sábado 31/10 de 16 a 19 hs."],
+  [-38.018754,-57.5439402, "<b>Mar del Plata, Buenos Aires</b><br>Plaza del Agua.<br>Sábado 31/10 de 16 a 19 hs."],
+  [-34.9208658,-57.9543559, "<b>La Plata, Buenos Aires</b><br>Plaza Moreno.<br>Sábado 31/10 de 14 a 16 hs."],
+  [-34.9274015,-57.9613423, "<b>La Plata, Buenos Aires</b><br>Plaza Malvinas Argentinas.<br>Sábado 31/10 de 14 a 16 hs."],
+  [-34.4493042,-58.7967412, "<b>Del Viso, Pilar, Buenos Aires</b><br>Lisandro de la Torre y Ruta Provincial 26.<br>Sábado 31/10 de 12 a 14 hs."],
+  [-34.5411323,-58.5623703, "<b>San Martín, Buenos Aires</b><br>Plaza Mitre de Chilavert.<br>Sábado 31/10 de 15 a 18 hs."],
+  [-34.6023729,-58.5922164, "<b>3 de Febrero, Buenos Aires</b><br>Plaza de los Aviadores (Ciudad Jardín).<br>Sábado 31/10 de 9 a 14 hs."],
+  [-34.6037064,-58.5630537, "<b>3 de Febrero, Buenos Aires</b><br>Plaza de la Unidad Nacional.<br>Sábado 31/10 de 9 a 14 hs."],
+  [-34.6877128,-58.3996364, "<b>Lanús, Buenos Aires</b><br>Av. San Martín 1340.<br>Sábado 31/10 de 14 a 18 hs."],
+  [-34.7982686,-58.3947545, "<b>Adrogué, Almirante Brown, Buenos Aires</b><br>Gral Roca entre Bartolomé Mitre y Martín González (frente a la boletería de la estación).<br>Sábado 31/10 de 14 a 17 hs."],
+  [-34.8560218,-58.5211462, "<b>Ezeiza, Buenos Aires</b><br>Peatonal de Ezeiza (Rafael Ramos Mejía al 300).<br>Sábado 31/10 de 11 a 17 hs."],
+  [-36.8627338,-57.8832401, "<b>Maipú, Buenos Aires</b><br>Plaza San Martín.<br>Sábado 31/10 de 10 a 13 hs."],
+  [-34.1700161,-58.959764, "<b>Campana, Buenos Aires</b><br>Parque Urbano (Av. Jorge Varela y Ameghino).<br>Sábado 31/10 de 14 a 18 hs."],
+  [-34.1672753,-58.9550061, "<b>Campana, Buenos Aires</b><br>Parque Italia (Boulevard Sarmiento).<br>Sábado 31/10 de 10 a 18 hs."],
+  [-34.1628441,-58.9596087, "<b>Campana, Buenos Aires</b><br>Plaza Eduardo Costa (entre Roca y San Martín).<br>Sábado 31/10 de 10 a 18 hs."],
+  [-34.5483655,-58.7041466, "<b>San Miguel, Buenos Aires</b><br>Plaza Muñiz (Av Pte Perón y San José).<br>Sábado 31/10 de 10 a 13 hs."],
+  [-34.1131158,-59.0157004, "<b>Zárate, Buenos Aires</b><br>Esquina Pacheco y Moreno.<br>Sábado 31/10 de 10 a 17 hs."],
+  [-34.1131158,-59.0157004, "<b>Zárate, Buenos Aires</b><br>Esquina Pacheco y Moreno.<br>Sábado 31/10 de 10 a 17 hs."],
+  [-34.0963188,-59.0244694, "<b>Zárate, Buenos Aires</b><br>Plaza Mitre (Justa Lima de Atucha y Belgrano).<br>Sábado 31/10 de 10 a 17 hs."],
+  [-34.4917902,-58.8435436, "<b>Derqui, Pilar, Buenos Aires</b><br>Av. de Mayo y San Martín.<br>Sábado 31/10 de 10 a 16 hs."],
+  [-34.4701573,-58.5117212, "<b>San Isidro, Buenos Aires</b><br>Mástil de San Isidro (Av. Gral Belgrano al 300).<br>Sábado 31/10 de 16 a 18 hs."],
+  [-34.4598579,-58.9132525, "<b>Pilar, Buenos Aires</b><br>Pilar Centro (Rivadavia entre Independencia y López).<br>Sábado 31/10 de 11 a 13 hs y de 14 a 16 hs."],
+  [-34.5132911,-58.4896334, "<b>Vicente López, Buenos Aires</b><br>Av. Maipú 2398 y Ugarte<br>Sábado 31/10 de 10:30 a 13 hs."],
+  [-37.9985437,-57.5489937, "<b>Mar del Plata, Buenos Aires</b><br>Catedral (San Martín y Mitre)<br>Sábado 31/10 de 15 a 19 hs."],
+  [-34.6649719,-58.7299268, "<b>Merlo, Buenos Aires</b><br>Plaza Merlo.<br>Sábado 31/10 de 15 a 18 hs."],
+  [-34.48073,-58.9874218, "<b>Estancias del Pilar, Pilar, Buenos Aires</b><br>Panamericana Km 56.5, Ramal Pilar Pilar Sur.<br>Sábado 31/10 de 11 a 13 hs y de 14 a 16 hs."],
+  [-34.7607336,-58.4018761, "<b>Lomas de Zamora, Buenos Aires</b><br>Laprida y España, a una cuadra de la estación de Lomas de Zamora.<br>Sábado 31/10 de 11 a 13 hs."],
+
+  /* Catamarca */
+
+  [-28.4688788,-65.7791936, "<b>San Fernando del Valle de Catamarca</b><br>Plaza 25 de Mayo (Monumento a San Martín)<br>Sábado 31/10 de 16 a 18 hs."],
+
+  /* Chaco */
+
+  [-27.4526291,-58.9884597, "<b>Resistencia, Chaco</b><br>Peatonal Resistencia (Juan Domingo Perón y Alberdi)<br>Sábado 31/10 de 9 a 12 hs. y de 17 a 20 hs"],
+
+  /* Chubut */
+
+  [-45.8626237,-67.4848925, "<b>Comodoro Rivadavia, Chubut</b><br>Plaza 83<br>Sábado 31/10 de 14 a 16 hs"],
+
+  /* Córdoba */
+
+  [-31.4209558,-64.1909973, "<b>Ciudad de Córdoba</b><br>Plaza Vélez Sarsfield.<br>Sábado 31/10 de 10 a 17 hs."],
+  [-31.4262537,-64.1801856, "<b>Ciudad de Córdoba</b><br>Parque Sarmiento.<br>Sábado 31/10 de 10 a 17 hs."],
+  [-31.4159484,-64.1862087, "<b>Ciudad de Córdoba</b><br>Peatonal San Martín.<br>Sábado 31/10 de 10 a 17 hs."],
+
+  /* Corrientes */
+
+  [-27.4735567,-58.8453067, "<b>Capital, Corrientes</b><br>Rivadavia 475<br>Sábado 31/10 de 14 a 19 hs"],
+  [-27.9526462,-58.8039576, "<b>Empedrado, Corrientes</b><br>General Roca 346<br>Sábado 31/10 de 14 a 19 hs"],
+  [-27.2690729,-58.2432798, "<b>Itatí, Corrientes</b><br>Plaza Central Fray Luis de Bolaños (frente a la Basílica)<br>Sábado 31/10 de 14 a 19 hs"],
+  [-27.3703635,-58.5127944, "<b>San Cosme, Corrientes</b><br>Plaza Central Gral Bartolomé Mitre<br>Sábado 31/10 de 14 a 19 hs"],
+  [-29.7930411,-58.0615839, "<b>Curuzú Cuatiá, Corrientes</b><br>Av. Mitre 1191<br>Sábado 31/10 de 14 a 18 hs"],
+  [-28.0521897,-56.0227807, "<b>Virasoro, Corrientes</b><br>Plaza Libertad<br>Sábado 31/10 de 16 a 20 hs"],
+  [-29.180335,-58.0814227, "<b>Mercedes, Corrientes</b><br>Rivas y Ferreyra<br>Sábado 31/10 de 16 a 20 hs"],
+  [-29.7139382,-57.1012228, "<b>Paso de los Libres, Corrientes</b><br>Belgrano 1982<br>Sábado 31/10 de 9 a 12 hs"],
+  [-29.1685677,-59.2631598, "<b>Goya, Corrientes</b><br>Barrio 160 viv. Manzana 494 Casa 40 (zona Sur) <br>Sábado 31/10 de 9 a 11 hs"],
+
+
+
+  /* Entre Ríos */
+
+  [-31.396973,-58.0176757, "<b>Concordia, Entre Ríos</b><br>Plaza 25 de Mayo (Mitre y Urquiza)<br>Sábado 31/10 de 10 a 12 hs y de 17 a 19 hs"],
+  [-32.2115312,-58.2192784, "<b>San José, Colón, Entre Ríos</b><br>Plaza General Urquiza (9 de Julio y Centenario)<br>Sábado 31/10 de 17 a 19 hs"],
+  [-32.392224,-59.7867247, "<b>Nogoyá, Entre Ríos</b><br>Boulevard España y San Martín.<br>Sábado 31/10 de 16 a 18 hs"],
+  [-31.8541896,-59.0273021, "<b>Villaguay, Entre Ríos</b><br>San Martín y Savio.<br>Sábado 31/10 de 16 a 18 hs"],
+  [-32.4846033,-58.2321604, "<b>Concepción del Uruguay, Entre Ríos</b><br>Plaza Ramírez.<br>Sábado 31/10 de 10 a 12 hs"],
+  [-31.7323395,-60.530061, "<b>Paraná, Entre Ríos</b><br>Urquiza y Peatonal.<br>Sábado 31/10 de 11 a 13 hs"],
+
+  /* Jujuy */
+
+  [-24.1854633,-65.2999389, "<b>San Salvador, Jujuy</b><br>Plaza Belgrano: frente a la Catedral<br>Sábado 31/10 de 17 a 20 hs."],
+  [-24.3760226,-65.1181701, "<b>Perico, Jujuy</b><br>Plaza San Martín<br>Sábado 31/10 de 17 a 20 hs."],
+  [-24.231649,-64.8679983, "<b>San Pedro, Jujuy</b><br>Plaza Belgrano<br>Sábado 31/10 de 17 a 19 hs."],
+  [-24.198401,-65.2965968, "<b>San Salvador, Jujuy</b><br>Pueyrredón 766<br>Sábado 31/10 de 9 a 12 hs."],
+  [-24.22500449917518, -64.84099774562361, "<b>La Esperanza, Jujuy</b><br>Plaza Cutielo.<br>Sábado 31/10 de 17 a 20 hs."],
+
+  /* La Rioja */
+
+  [-29.4388416,-66.896722, "<b>Capital, La Rioja</b><br>Parque de la Ciudad<br>Sábado 31/10 de 15 a 20 hs."],
+  [-29.1650374,-67.4954957, "<b>Chilecito, La Rioja</b><br>Plaza Principal \"Caudillos Federales\".<br>Sábado 31/10 de 16 a 18 hs."],
+
+  /* Mendoza */
+
+  [-32.8464648,-68.8609022, "<b>Las Heras, Mendoza</b><br>Parque de la Familia (Boulogne Sur Mer y Río Diamante).<br>Sábado 31/10 de 18 a 20 hs."],
+  [-35.4683712,-69.5850843, "<b>Malargüe, Mendoza</b><br>Plaza San Martín.<br>Sábado 31/10 de 10 a 12 hs."],
+  [-32.8940654,-68.8456613, "<b>Capital, Mendoza</b><br>Colón y Mitre.<br>Sábado 31/10 de 10 a 12 hs."],
+  [-32.8894731,-68.8458231, "<b>Capital, Mendoza</b><br>Parque Central.<br>Sábado 31/10 de 16 a 18 hs."],
+  [-34.6151276,-68.3294441, "<b>San Rafael, Mendoza</b><br>Av. San Martín y Chile.<br>Sábado 31/10 de 10 a 13:30 hs y de 17 a 19 hs."],
+  [-33.1956063,-68.4654099, "<b>Rivadavia, Mendoza</b><br>Plaza Rivadavia (San Isidro y Aristóbulo del Valle).<br>Sábado 31/10 de 10 a 12:30 hs."],
+  [-33.3727553,-69.14767, "<b>Tupungato, Mendoza</b><br>Plaza Tupungato.<br>Sábado 31/10 de 17 a 19 hs."],
+  [-32.9846182,-68.7883808, "<b>Maipú, Mendoza</b><br>Plaza de Maipú.<br>Sábado 31/10 de 17 a 19 hs."],
+  [-32.9072391,-68.790259, "<b>Guaymallén, Mendoza</b><br>Rondeau y 25 de Mayo.<br>Sábado 31/10 de 10 a 13 hs."],
+  [-32.9081763,-68.8009092, "<b>Guaymallén, Mendoza</b><br>Pedro Vargas y Houssay (frente a la Parroquia Santa Bernardita).<br>Sábado 31/10 de 16 a 18 hs."],
+  [-33.0392185,-68.8798019, "<b>Luján de Cuyo, Mendoza</b><br>Plaza Departamental de Luján de Cuyo.<br>Sábado 31/10 de 10 a 17 hs."],
+  [-34.6162121,-68.3314584, "<b>San Rafael, Mendoza</b><br>KM 0 de San Rafael.<br>Sábado 31/10 de 10 a 13:30 hs y de 17 a 19 hs."],
+
+  /* Misiones */
+
+  [-27.3689323,-55.8977447, "<b>Posadas, Misiones</b><br>Plaza San Martín<br>Sábado 31/10 de 9 a 12 hs."],
+  [-26.4083387,-54.6064591, "<b>Eldorado, Misiones</b><br>Av. San Martín y Christiansen<br>Sábado 31/10 de 7:30 a 12 hs."],
+  [-27.485622,-55.1214836, "<b>Oberá, Misiones</b><br>Plazoleta de la Equidad (Av. Sarmiento y Santa Fé)<br>Sábado 31/10 de 8 a 19 hs."],
+
+  /* Neuquén */
+
+  [-38.9506397,-68.221551, "<b>Plottier, Neuquén</b><br>9 de Julio y Alberdi.<br>Sábado 31/10 de 18 a 20 hs."],
+  [-38.9571374,-68.0607991, "<b>Ciudad de Neuquén</b><br>Parque Central (Sarmiento y San Luis).<br>Sábado 31/10 de 11 a 13 hs."],
+  [-38.9519076,-68.0589509, "<b>Ciudad de Neuquén</b><br>Av. Argentina y Boulevard 25 de Mayo (frente al Monumento a San Martín).<br>Sábado 31/10 de 15 a 17:30 hs."],
+
+  /* Río Negro */
+
+  [-39.0286027,-67.5744731, "<b>General Roca, Río Negro</b><br>Sarmiento y Tucumán.<br>Sábado 31/10 de 10 a 13 hs."],
+  [-41.1337858,-71.3090904, "<b>Bariloche, Río Negro</b><br>Esquina Villegas y Mitre.<br>Sábado 31/10 de 10 a 13 hs."],
+  [-41.118741,-71.4037385, "<b>Bariloche, Río Negro</b><br>Esquina Ruta 82 y Bustillo.<br>Sábado 31/10 de 15 a 18 hs."],
+
+  /* Salta */
+
+  [-24.7899194,-65.411102, "<b>Ciudad de Salta</b><br>Plazoleta Cuatro Siglos<br>Sábado 31/10 de 10 a 12:30 hs."],
+  [-24.7891997,-65.4285176, "<b>Ciudad de Salta</b><br>Plaza Alvarado<br>Sábado 31/10 de 17 a 20 hs."],
+  [-24.9074446,-65.6429502, "<b>Campo Quijano, Salta</b><br>Plaza Martín Fierro<br>Sábado 31/10 de 17 a 20 hs."],
+  [-24.8749344,-65.5905233, "<b>La Silleta, Salta</b><br>Plaza 8 de Diciembre<br>Sábado 31/10 de 10 a 12:30 hs."],
+  [-24.6026333,-65.3807387, "<b>La Caldera, Salta</b><br>Plaza San Martín<br>Sábado 31/10 de 17 a 20 hs."],
+  [-23.1286697,-64.3214884, "<b>Orán, Salta</b><br>Plaza General Pizarro<br>Sábado 31/10 de 10 a 12:30 hs."],
+  [-25.798603,-64.9740013, "<b>Rosario de la Frontera, Salta</b><br>Plaza Independencia<br>Sábado 31/10 de 10 a 12:30 hs."],
+  [-22.5167851,-63.805746, "<b>Tartagal, Salta</b><br>Plaza San Martín<br>Sábado 31/10 de 20 a 22 hs."],
+  [-24.7207481,-65.4079284, "<b>Ciudad de Salta</b><br>Ciudad del Milagro en Av. Batalla de Salta, entre Armada Argentina y Ejército Argentino.<br>Sábado 31/10 de 10 a 12:30 hs."],
+  [-24.9856994,-65.5782769, "<b>Rosario de Lerma, Salta</b><br>Plaza Central.<br>Sábado 31/10 de 10 a 12:30 hs."],
+
+  /* San Juan */
+
+  [-31.5394786,-68.5371976, "<b>Capital, San Juan</b><br>Plaza Bicentenario<br>Sábado 31/10 de 18 a 20:30 hs."],
+  [-31.540393,-68.4979835, "<b>Santa Lucía, San Juan</b><br>Plaza de Santa Lucía<br>Sábado 31/10 de 10 a 12 hs."],
+  [-31.5661725,-68.5302647, "<b>Rawson, San Juan</b><br>Plaza Villa Krause<br>Sábado 31/10 de 18 a 20:30 hs."],
+  [-31.5278922,-68.567215, "<b>Rivadavia, San Juan</b><br>Basílica Desamparados<br>Sábado 31/10 de 18 a 20:00 hs."],
+
+  /* Santa Cruz */
+
+  [-51.6082036,-69.2452862, "<b>Río Gallegos, Santa Cruz</b><br>Soledad Constanzo 58<br>Sábado 31/10 de 11 a 17 hs."],
+  [-46.590927,-70.9196189, "<b>Perito Moreno, Santa Cruz</b><br>Pasaje Padre Bufano Prieto 1564<br>Sábado 31/10 de 18 a 20 hs."],
+  [-47.740343,-65.9029593, "<b>Puerto Deseado, Santa Cruz</b><br>Calle Juan D. Perón 2146<br>Sábado 31/10 de 9 a 13 hs."],
+  [-47.7458918,-65.8857876, "<b>Puerto Deseado, Santa Cruz</b><br>Sargento Cabral 1472<br>Sábado 31/10 de 15 a 17 hs."],
+  [-49.3077659,-67.7388023, "<b>Puerto San Julián, Santa Cruz</b><br>Pueyrredón 1430<br>Sábado 31/10 de 15 a 17:30 hs."],
+  [-46.7980129,-67.9563659, "<b>Pico Truncado, Santa Cruz</b><br>Urquiza 255<br>Sábado 31/10 de 14 a 18 hs."],
+  [-50.3382221,-72.2591351, "<b>Calafate, Santa Cruz</b><br>Rauli N°655<br>Sábado 31/10 de 18 a 20 hs."],
+
+  /* Santa Fe */
+
+  [-32.9402847,-60.7131727, "<b>Rosario, Santa Fe</b><br>Parque Bartolomé Mitre (en las 4 plazas)<br>Sábado 31/10 de 10 a 16 hs."],
+  [-32.9295152,-60.7322761, "<b>Rosario, Santa Fe</b><br>Bar Antártida (Sánchez de Loria Bis 101)<br>Sábado 31/10 de 10 a 12 hs."],
+  [-31.6101988,-60.6730869, "<b>Capital, Santa Fe</b><br>Plaza Matorras (Patricio Cullen y Estanislao Zeballos)<br>Sábado 31/10 de 10 a 12 hs y de 17 a 19 hs."],
+  [-33.7455521,-61.9690002, "<b>Venado Tuerto, Santa Fe</b><br>Plaza San Martín<br>Sábado 31/10 de 10 a 12 hs"],
+
+  /* Santiago del Estero */
+
+  [-27.7864464,-64.2601187, "<b>Capital, Santiago del Estero</b><br>Peatonal Tucumán entre Libertad y Pellegrini<br>Sábado 31/10 de 9 a 13 hs."],
+  [-27.9384763,-63.4275882, "<b>Suncho Corral, Santiago del Estero</b><br>Plazoleta Felipe Ibarra (San Martín y 9 de Julio)<br>Sábado 31/10 de 18 a 21 hs."],
+
+
+  /* Tierra del Fuego */
+
+  [-54.8109006, -68.3171608, "<b>Ushuaia, Tierra del Fuego</b><br>Cartel de Ushuaia (Avenida Prefectura Naval y calle Luis Pedro Fique)<br>Sábado 31/10 de 12 a 14 hs."],
+];
+
+var marcadores = [];
+
+for (i=0; i < datos.length; i++) {
+  L.marker([datos[i][0], datos[i][1]], {icon: bandera}).addTo(map).bindPopup(datos[i][2]).on('click', onClick);
+}
+
+function onClick(e) {
+  map.flyTo(e.target.getLatLng(), 13);
+}
+/*
+map.on('zoom', function() {
+    if (map.getZoom() > 9) {
+      for (i=0; i < circulos.length; i++) {
+        map.removeLayer(circulos[i]);
+      }
+    } else {
+      for (i=0; i < circulos.length; i++) {
+        circulos[i].addTo(map);
+      }
+    }
+});
+*/
+function centrarMapa(){
+  map.flyTo([-40.5329411,-62], 4);
+}
+
+function CABA(){
+  map.flyTo([-34.6124422,-58.4450123], 12);
+}
+
+function BuenosAires(){
+  map.flyTo([-36,-59], 7);
+}
+
+function Catamarca(){
+  map.flyTo([-28.4923072,-65.7919211], 8);
+}
+
+function Chaco(){
+  map.flyTo([-27.4526291,-58.9884597], 8);
+}
+
+function Chubut(){
+  map.flyTo([-45.8626237,-67.4848925], 8);
+}
+
+function Cordoba(){
+  map.flyTo([-31.4209558,-64.1909973], 8);
+}
+
+function Corrientes(){
+  map.flyTo([-28.7683078,-57.6499255], 7);
+}
+
+function EntreRios(){
+  map.flyTo([-32.3623078,-59.2868403], 8);
+}
+
+function Jujuy(){
+  map.flyTo([-24.3077619,-65.0229027], 10);
+}
+
+function LaRioja(){
+  map.flyTo([-29.336025,-67.1003031], 8);
+}
+
+function Mendoza(){
+  map.flyTo([-34.0116015,-68.8386173], 8);
+}
+
+function Misiones(){
+  map.flyTo([-27.2487936,-55.3060758], 8);
+}
+
+function Neuquen(){
+  map.flyTo([-38.9247682,-68.2766268], 10);
+}
+
+function RioNegro(){
+  map.flyTo([-40.0122968,-68.9202278], 7);
+}
+
+function Salta(){
+  map.flyTo([-24.1308477,-65.2335943], 8);
+}
+
+function SanJuan(){
+  map.flyTo([-31.5394786,-68.5371976], 12);
+}
+
+function SantaFe(){
+  map.flyTo([-32.7727038,-61.4160611], 8);
+}
+
+function SantaCruz(){
+  map.flyTo([-49.1377747,-70.2554875], 6);
+}
+
+function SantiagoDelEstero(){
+  map.flyTo([-27.863842,-63.9025712], 8);
+}
+
+function TierraDelFuego(){
+  map.flyTo([-54.678548,-67.6147293,7], 8);
+}
+</script>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+<script>
+$("#info").modal({
+  fadeDuration: 750
+});
+</script>
+</html>
