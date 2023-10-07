@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#afiliatenos {
+  margin-top: 0 !important;
+}
+
+#inicio {
+  width: 100vw;
+  height: 100vh;
+  background-color: #424242;
+}
+
+#threejs {
+  width: 100%;
+  height: 100%;
+}
