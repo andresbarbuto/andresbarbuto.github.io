@@ -1,0 +1,297 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Amatic SC', cursive;
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+nav {
+  height: 40px;
+  background-color: #e9c46a;
+  background-image: url("img/fondo1.png");
+  position: fixed;
+  width: 100%;
+  border-bottom: 1px solid #e3b644;
+  overflow: hidden;
+}
+
+nav ul {
+  margin: 0;
+}
+
+nav ul li {
+  display: inline-block;
+  margin: 0 2vw;
+}
+
+nav ul li a {
+  font-weight: 700;
+  color: #49380B;
+  line-height: 40px;
+  font-size: 30px;
+}
+
+nav ul li a:hover {
+  color: #b78b1b;
+}
+
+header {
+  background-color: #fff;
+  color: #000;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+#header-texto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1, h2 {
+  font-size: calc(3vw + 20px);
+  font-weight: 700;
+}
+
+h1 {
+  margin: 10px;
+}
+
+h2 {
+  margin: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#header-texto ul {
+  margin: 10px 10px 20px 10px;
+}
+
+#header-texto ul li {
+  font-size: calc(2vw + 15px);
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 25px;
+  border-radius: 50px;
+}
+
+#header-texto ul li a {
+  color: #fff;
+}
+
+#header-texto ul li:hover {
+  cursor: pointer;
+  background-color: #e9c46a;
+  background-image: url("img/fondo1.png");
+}
+
+header {
+  padding-top: 50px;
+}
+
+section {
+  padding-top: 40px;
+  padding-bottom: 20px;
+}
+
+.disponibles {
+  background-color: #2a9d8f;
+  background-image: url("img/fondo2.png");
+}
+
+.a-medida {
+  background-color: #e76f51;
+  background-image: url("img/fondo3.png");
+}
+
+#header-imagen {
+  display: flex;
+  justify-content: center;
+}
+
+#header-imagen img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+}
+
+section.disponibles {
+  color: #fff;
+  border-top: 1px solid #25897e;
+  border-bottom: 1px solid #25897e;
+}
+
+section.a-medida {
+  color: #fff;
+  border-top: 1px solid #e2522e;
+  border-bottom: 1px solid #e2522e;
+}
+
+section.contacto {
+  background-color: #264653;
+  background-image: url("img/fondo4.png");
+  color: #fff;
+  border-top: 1px solid #223E49;
+}
+
+.contenedor {
+  margin: 30px auto;
+  width: 96vw;
+}
+
+.contenedor img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+}
+
+iframe {
+  width: 569px;
+  height: 315px;
+  max-width: 90vw;
+  max-height: 50vw;
+  border: 2px solid #25897e;
+  box-sizing: border-box;
+}
+
+p, h3 {
+  font-size: calc(2vw + 15px);
+}
+
+h3 {
+  margin: 0;
+  text-align: center;
+}
+
+#tarjetas {
+  margin: 20px 0;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tarjeta {
+  background-color: #fff;
+  color: #2a9d8f;
+  margin: 4vw;
+  display: inline-block;
+  padding: 15px;
+  border-radius: 10px;
+  -webkit-box-shadow: -10px -10px 0px 0px rgba(21,79,72,0.3);
+  box-shadow: -10px -10px 0px 0px rgba(21,79,72,0.3);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.tarjeta hr {
+  display: block;
+  border: none;
+  height: 3px;
+  background-color: #2a9d8f;
+  margin: 5px 0;
+}
+
+.tarjeta ul li {
+  font-size: calc(1.5vw + 15px);
+}
+
+.precio {
+  color: #F4A261;
+}
+
+.disponibles .pedilo {
+    margin: 30px auto;
+    text-align: center;
+}
+
+.disponibles .pedilo a {
+    background-color: #2a9d8f;
+    color: #fff;
+}
+
+.pedilo a {
+    padding: 5px 25px;
+    border-radius: 40px;
+    font-weight: 700;
+}
+
+.disponibles .pedilo a:hover {
+    background-color: #e9c46a;
+}
+
+.pedilo i {
+    margin-right: 10px;
+}
+
+
+.a-medida ul {
+  margin: 30px;
+  text-align: right;
+  display: inline-block;
+}
+
+.a-medida ul li {
+  margin: calc(1vw + 5px);
+  font-size: calc(1.5vw + 15px);;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+input {
+  margin: 0 calc(1vw + 5px);
+  height: calc(2vw + 15px);
+  width: calc(3vw + 20px);
+  font-size: calc(1.5vw + 15px);
+  font-family: 'Amatic SC', cursive;
+  font-weight: 700;
+  text-align: center;
+}
+
+.a-medida .pedilo {
+  margin: calc(2vw + 15px) calc(1.5vw + 5px) 0 auto;
+}
+
+.a-medida .pedilo a {
+  background-color: #264653;
+  color: #fff;
+}
+
+.a-medida .pedilo a:hover {
+  cursor: pointer;
+    background-color: #e9c46a;
+}
+
+#mapa {
+  margin: 0 auto;
+  width: 92vw;
+  height: 400px;
+  border: 2px solid #223E49;
+  box-sizing: border-box;
+}
+
+p a {
+  color: #E9C46A;
+}
+
+p a:hover {
+  color: #F4A261;
+}
+
+.nohay {
+  border: 2px dashed #fff;
+  padding: 10px 20px;
+  border-radius: 25px;
+}
