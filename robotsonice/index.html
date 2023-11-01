@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robots on Ice</title>
+<link rel="stylesheet" href="estilos.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+</head>
+<body>
+<h1>Robots on Ice</h1>
+<table id="entrada">
+<tr><td>Number of rows:</td><td><input id="rows" type="text" value=3></td></tr>
+<tr><td>Number of columns:</td><td><input id="columns" type="text" value=6></td></tr>
+<tr><td>Checkpoing 1 Row:</td><td><input id="r1j" type="text" value=2></td></tr>
+<tr><td>Checkpoint 1 Column:</td><td><input id="c1j" type="text" value=1></td></tr>
+<tr><td>Checkpoint 2 Row:</td><td><input id="r2j" type="text" value=2></td></tr>
+<tr><td>Checkpoint 2 Column:</td><td><input id="c2j" type="text" value=4></td></tr>
+<tr><td>Checkpoint 3 Row:</td><td><input id="r3j" type="text" value=0></td></tr>
+<tr><td>Checkpoint 3 Column:</td><td><input id="c3j" type="text" value=4></td></tr>
+</table>
+
+<h2>Input Grid</h2>
+<div id="input"></div>
+
+<button id="solve" onclick="robotsOnIce()">Get valid tours</button>
+
+<h2>Output Grids</h2>
+<div id="output"></div>
+<script>
+var rows = 3;
+var columns = 6;
+var r1j = 2;
+var c1j = 1;
+var r2j = 2;
+var c2j = 4;
+var r3j = 0;
+var c3j = 4;
+
+$("#rows").change(function(){
+  rows = $("#rows").val();
+  rows = parseInt(rows);
+});
+
+$("#columns").change(function(){
+  columns = $("#columns").val();
+  columns = parseInt(columns);
+});
+
+$("#r1j").change(function(){
+  r1j = $("#r1j").val();
+  r1j = parseInt(r1j);
+});
+
+$("#c1j").change(function(){
+  c1j = $("#c1j").val();
+  c1j = parseInt(c1j);
+});
+
+$("#r2j").change(function(){
+  r2j = $("#r2j").val();
+  r2j = parseInt(r2j);
+});
+
+$("#c2j").change(function(){
+  c2j = $("#c2j").val();
+  c2j = parseInt(c2j);
+});
+
+$("#r3j").change(function(){
+  r3j = $("#r3j").val();
+  r3j = parseInt(r3j);
+});
+
+$("#c3j").change(function(){
+  c3j = $("#c3j").val();
+  c3j = parseInt(c3j);
+});
+
+$("input").change(function(){
+  inputTable();
+  $("#output").html("");
+});
+
+function inputTable() {
+  var html = "<table>";
+
+  html += "<tr>";
+    for (var j=-1; j<columns; j++) {
+      if (j == -1) {
+        html += "<th></th>";
+      } else {
+        html += `<th>${j}</th>`;
+      }
+      
+    }
+  html += "</tr>";
+
+  for (var i=rows-1; i>=0; i--) {
+    html += `<tr><th>${i}</th>`;
+
+
+
+
+    for (var j=0; j<columns; j++) {
+
+      if (i==r1j && j==c1j) {
+        html += `<td class='rojo'>${Math.floor(rows*columns/4)}</td>`;
+      } else if (i==r2j && j==c2j) {
+        html += `<td class='rojo'>${Math.floor(rows*columns/2)}</td>`;
+      } else if (i==r3j && j==c3j) {
+        html += `<td class='rojo'>${Math.floor(3*rows*columns/4)}</td>`;
+      }
+
+
+       else {
+        html += `<td></td>`;
+      }
+      
+    }
+    html += "</tr>"
+  }
+  html += "</table>";
+  $("#input").html(html);
+}
+
+function robotsOnIce() {
+  $.ajax({
+    method: "POST",
+    url: "robotsonice.php",
+    data: { m: rows, n: columns, r1: r1j, c1: c1j, r2: r2j, c2: c2j, r3: r3j, c3: c3j }
+    /*data: { text: $("#output").text() }*/
+  })
+    .done(function( response ) {
+      $("#output").html(response);
+    });
+}
+
+inputTable();
+//robotsOnIce();
+</script>
+
+</body>
+</html>
